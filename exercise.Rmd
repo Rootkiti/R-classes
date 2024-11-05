@@ -1,0 +1,205 @@
+---
+title: "Exercise-1"
+author: "Rootkit"
+date: "2024-11-05"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+```{r exercise chunk}
+# Addition: What is the result of adding 5 and 3 using the addition operator (+) in R?
+cat("Addition: What is the result of adding 5 and 3 using the addition operator (+) in R? \n")
+cat('Result:', 5 + 3, "\n\n")
+
+#Subtraction: Subtract 4 from 10. What is the result?
+cat("Subtraction: Subtract 4 from 10. What is the result? \n")
+
+cat('Result:', 10 -4,"\n\n" )
+
+#. Multiplication: Multiply 7 by 6. What is the output?
+cat("Multiplication: Multiply 7 by 6. What is the output? \n")
+cat('Result:', 7 * 6, "\n\n")
+
+# Division: Divide 15 by 3. What is the result?
+cat(" Division: Divide 15 by 3. What is the result? \n")
+
+cat('Result:', 15 / 3, "\n\n")
+
+# Modulus: Use the modulus operator (%%) to find the remainder when 17 is divided by 5. What do you get?
+
+cat(" Modulus: Use the modulus operator (%%) to find the remainder when 17 is divided by 5. What do you get? \n")
+cat('Result:', 17 %% 5, "\n\n")
+
+#Exponent: Calculate 3 raised to the power of 4 using the exponent operator (^). What is the answer?
+cat("Exponent: Calculate 3 raised to the power of 4 using the exponent operator (^). What is the answer? \n")
+cat('Result: ', 3 ^ 4, "\n\n")
+
+# Integer Division: Perform integer division of 25 by 4 using the integer division operator (%/%).What is the result?
+
+cat(" Integer Division: Perform integer division of 25 by 4 using the integer division operator (%/%). What is the result? \n")
+cat('Result:', 25 %/%  4,"\n\n")
+
+
+
+#. Less than: Is 8 less than 10? Write the expression and its result.
+cat("Less than: Is 8 less than 10? Write the expression and its result. \n")
+cat('Result:', 8 < 10,"\n\n")
+
+# . Less than or equal to: Check if 15 is less than or equal to 15. What is the result?
+
+cat("Less than or equal to: Check if 15 is less than or equal to 15. What is the result? \n")
+cat('Result:', 15 <= 15, "\n\n")
+
+# Greater than: Determine if 20 is greater than 15. Write the expression and the answer
+cat(" Greater than: Determine if 20 is greater than 15. Write the expression and the answer \n")
+cat('Result:', 20 > 15, "\n\n")
+
+# Greater than or equal to: Is 5 greater than or equal to 10? Write the expression and the output.
+cat(" Greater than or equal to: Is 5 greater than or equal to 10? Write the expression and the output. \n")
+cat('Result:', 5 >= 10, "\n\n")
+
+#Exactly equal to: Check if the string "Data" is exactly equal to "data". What is the result?
+cat("Exactly equal to: Check if the string 'Data' is exactly equal to 'data'. What is the result? \n")
+cat('Result: ', "Data" == "data", "\n\n")
+
+# Not equal to: Verify if 7 is not equal to 10. What does the output indicate?
+cat(' Not equal to: Verify if 7 is not equal to 10. What does the output indicate? \n')
+cat('Result:', 7 != 10, "\n\n")
+
+# Negation: What is the result of !TRUE and !FALSE in R?
+cat(" Negation: What is the result of !TRUE and !FALSE in R? \n")
+cat('Result of !TRUE:', !TRUE, "\n")
+cat('Result of ! FALSE:', !FALSE, "\n\n")
+
+#AND: What is the result of TRUE & FALSE?
+cat("AND: What is the result of TRUE & FALSE? \n")
+cat('Result:', TRUE & FALSE, "\n\n")
+
+#OR: Determine the result of TRUE | FALSE.
+cat("OR: Determine the result of TRUE | FALSE.\n")
+cat('Result:', TRUE & FALSE, "\n\n")
+
+charToRaw('Rootkit')
+raw_vector <- as.raw(c(0x52, 0x6f, 0x6f, 0x74, 0x6b, 0x69, 0x74))
+
+# Convert to character
+result <- rawToChar(raw_vector)
+print(result)
+
+dt =  c("Red", "Blue", "Green", "Red")
+#lvl = c(1,2,3)
+fac <- factor( dt)
+fac
+
+nums <- 1:5
+nums
+
+my_list = c(12,3,"hello")
+my_list[1]
+
+sequence <- seq(from = 1, to = 12, by = 2)
+m <- matrix(sequence, nrow=2, ncol=3)
+m
+
+df <- data.frame (
+  name = c("Strength", "Stamina", "Other"),
+  age = c(100, 150, 120),
+  grade = c(60, 30, 45)
+)
+pie(df['age'])
+```
+Data Structures
+```{r}
+# list
+list1 <- list(1,2,3,4,5)
+list2 <- list(6,7,8,9,10)
+
+# list operations
+
+# converting list to vector `unlist()`
+
+v1 <- unlist(list1)
+v1
+
+# combining lists
+
+combined_list <- c(list1, list2)
+combined_list
+
+# removing an element from a list
+
+combined_list[10] <- NULL
+
+length(combined_list)
+
+```
+```{r}
+# Vectors
+
+vector1 <- c(1,2,3,4,5)
+vector2 <- c(6,7,8,9,10)
+
+# vector operations
+
+vector1 + vector2  # addition of two vectors
+
+vector1 - vector2 # vector subtraction
+
+vector1 * vector2 # vector multiplication
+
+vector1 / vector2 # vector divisio
+
+# vector with scala operation
+
+vector1 * 2 # vector scala multiplication
+
+vector1 / 2 # vector1 scala division
+
+vector1 + 2 # vector1 scala addition
+
+# vector to list
+l1 = list(vector1)
+typeof(l1)
+typeof(vector1)
+
+vectors = c(vector1, vector2)
+vectors
+
+# ediiting an element in vector
+vectors[9] <- 900
+
+vectors
+
+```
+
+```{r}
+# arrays
+
+arr1 <- array(1:12)
+arr2 <- array(12:1)
+arr1
+
+# array operations
+
+arr1 + arr2 # array addition
+
+arr1 - arr2 # array subtraction
+
+# arrays with scala operations
+
+arr1 + 2 # array scalar addition
+
+arr1d1 = array(arr1, dim= c(4,3))
+arr2d2 = array(arr2, dim= c(4,3))
+
+arr1d1 * arr2d2
+```
+```{r}
+
+```
+
+
