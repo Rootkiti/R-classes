@@ -20,5 +20,84 @@ v
 x <- seq(0, 2*pi, length.out=90)
 length(x)
 range(x)
+max(x)
+min(x)
+mean(x)
+sum(x)
 ```
+
+##looping with `rep` function
+what are tail and head
+```{r}
+y <- rep(0:100)
+head(y, 10)
+tail(y, 10)
+
+tail <- tail(y, 5)
+```
+```{r}
+edit(tail)
+
+```
+```{r}
+rep(c(0:1),each=10)
+rep(c(0:1), c(10,10))
+```
+##Probabilities
+Random generation
+
+```{r}
+set.seed(123)
+sample(0:1, size=200, replace=TRUE, prob = c(1/3, 1-1/3)) -> y
+sum(y ==0)
+```
+using `table()`
+```{r}
+t<- table(y)
+t
+```
+proportions: `prop.table()` is applied on `table()`
+```{r}
+prop.table(t)
+```
+to get count we use `sum` and for the proportion we use `mean`
+```{r}
+sum(y == 0)
+mean(y == 0)
+```
+In summary, `table()` can give us the count of all element in table format and `prop.table()` gives us proportions for each element and it have to be applied on `table()`
+
+### Mimicking the LUDO game
+```{r}
+sample(6,size=1)
+```
+##Matrix
+```{r}
+matrix(rep(0, 5*6), nrow=5,)
+```
+1 0 0 1
+0 1 1 1
+0 0 1 1
+
+$$
+\begin{pmatrix}
+1 & 0 & 0 & 1\\
+0 & 1 & 1 & 1\\
+0 & 0 & 1 & 1\\
+\end{pmatrix}
+$$
+
+```{r}
+elements <- c(1, 0, 0, 1,
+              0, 1, 1, 1,
+              0, 0, 1, 1)
+
+# Create a 3x4 matrix
+my_matrix <- matrix(elements, nrow = 3, ncol = 4, byrow = TRUE)
+
+# Print the matrix
+print(my_matrix)
+```
+
+
 
