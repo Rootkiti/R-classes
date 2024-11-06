@@ -1,0 +1,24 @@
+---
+title: "INTRODUCTION TO R PROGRAMMING"
+author: "Rootkit"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Data Structures
+
+
+```{r}
+v<- c(1,0,0,T,T,F)
+v
+```
+```{r}
+x <- seq(0, 2*pi, length.out=90)
+length(x)
+range(x)
+```
+

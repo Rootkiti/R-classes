@@ -227,5 +227,25 @@ fac1[1] <- "medium"
 fac1
 
 ```
+```{r}
+# metrix
+
+m1 <- matrix(1,2,3)
+m2 <- matrix(2,2,3 )
+
+# matrix operations
+
+#m1 + m2
+#m1 - m2
+#m1 / m2
+m1
+m2
+
+m1 * m2
+```
+
+
+```{r}
+```
 
 
