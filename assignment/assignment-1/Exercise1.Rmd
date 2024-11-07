@@ -1,0 +1,64 @@
+---
+title: "Exercise 1"
+author: "Lema Logamou Seknewna"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+Download the Rmarkdown [here](Exercises/Exercise1.Rmd).
+
+
+1. Import the CSV (comma-separated value) using the `read.csv()` command. Name it `survey_data`.
+```{r}
+# write your code here
+
+```
+
+
+2. How many row and columns does `survey_data` contains.
+```{r}
+# write your code here
+
+```
+
+
+3. How many participants have a master's degree?
+```{r}
+# write your code here
+
+```
+
+4. How many participants have a bachelor's degree?
+```{r}
+# write your code here
+
+```
+
+5. How many female participants have a bachelor's degree?
+```{r}
+# write your code here
+
+```
+
+
+5. What is the percentage of male participants with a master's degree?
+```{r}
+# write your code here
+
+```
+
+6. Add a new column to calculate the age from date of birth
+```{r}
+
+```
+
+
+7. What is the percentage of male participants with under 30 years old?
+```{r}
+# write your code here
+
+```
+
+
+

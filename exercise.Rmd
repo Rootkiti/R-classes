@@ -135,6 +135,7 @@ combined_list
 combined_list[10] <- NULL
 
 length(combined_list)
+list1[6]
 
 ```
 ```{r}
@@ -172,7 +173,7 @@ vectors
 # ediiting an element in vector
 vectors[9] <- 900
 
-vectors
+
 
 ```
 
