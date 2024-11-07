@@ -12,6 +12,7 @@ Download the Rmarkdown [here](Exercises/Exercise1.Rmd).
 1. Import the CSV (comma-separated value) using the `read.csv()` command. Name it `survey_data`.
 ```{r}
 # write your code here
+(survey_data = read.csv("data.csv"))
 
 ```
 
@@ -19,6 +20,7 @@ Download the Rmarkdown [here](Exercises/Exercise1.Rmd).
 2. How many row and columns does `survey_data` contains.
 ```{r}
 # write your code here
+cat("the dataset has", nrow(survey_data), "rows and ",ncol(survey_data), "columns")
 
 ```
 
@@ -26,30 +28,42 @@ Download the Rmarkdown [here](Exercises/Exercise1.Rmd).
 3. How many participants have a master's degree?
 ```{r}
 # write your code here
+cat(sum(survey_data["Completed.Program"] == "Master's degree"), "participants have master's degree")
 
 ```
 
 4. How many participants have a bachelor's degree?
 ```{r}
 # write your code here
-
+cat(sum(survey_data["Completed.Program"] == "Bachelor's degree"), "participants have 	Bachelor's degree")
 ```
 
 5. How many female participants have a bachelor's degree?
 ```{r}
 # write your code here
-
+cat(sum((survey_data["Completed.Program"] == "Bachelor's degree") & (survey_data["Gender"] == "Female")), " female participants have Bachelor's degree")
 ```
 
 
 5. What is the percentage of male participants with a master's degree?
 ```{r}
 # write your code here
+( mastar_holder <- subset(survey_data, Completed.Program == "Master's degree"))
+(master_holder_gender <- mastar_holder["Gender"])
+(master_gender_table = table(master_holder_gender))
+(master_prop_tabel = prop.table(master_gender_table))
+cat("the percentage of Male participants with master's degree is ",master_prop_tabel["Male"]*100,"%")
 
 ```
 
 6. Add a new column to calculate the age from date of birth
 ```{r}
+# Assuming survey_data is your data frame and Date.of.Birth is in "day/month/year" format
+(formaed_date <- as.Date(survey_data$Date.of.Birth, format = "%d/%m/%Y"))
+
+# Calculate the age
+(survey_data$Age <- as.numeric(difftime(Sys.Date(), formaed_date, units = "days")) / 365.25)
+#survey_data
 
 ```
 
@@ -57,8 +71,31 @@ Download the Rmarkdown [here](Exercises/Exercise1.Rmd).
 7. What is the percentage of male participants with under 30 years old?
 ```{r}
 # write your code here
+males <- subset(survey_data, Gender=="Male")
+prop.table(table(males$Age < 30))[2] * 100
 
 ```
 
+```{r}
+# Filter rows where "information" is found in the Background column
+(
+  survey_data[grepl("UR", survey_data$Institution, ignore.case = TRUE) & 
+                             grepl("Male", survey_data$Gender, ignore.case = TRUE), ]
+)
+
+
+
+```
+## Outlier Detection
+we user `IQR` to detect outliers and the formlar is $$[Q1 - 1.5*TQR, Q3 + 1.5*IQR]$$
+```{r}
+
+
+survey_data$Age[survey_data$Age < 10] <- NA
+mean(survey_data$Age, na.rm = TRUE)
+
+survey_data$Age[is.na(survey_data$Age)]  <- mean(survey_data$Age, na.rm = TRUE)
+boxplot(survey_data$Age)
+```
 
 
