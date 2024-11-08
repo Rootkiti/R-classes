@@ -62,7 +62,7 @@ cat("the percentage of Male participants with master's degree is ",master_prop_t
 (formaed_date <- as.Date(survey_data$Date.of.Birth, format = "%d/%m/%Y"))
 
 # Calculate the age
-(survey_data$Age <- as.numeric(difftime(Sys.Date(), formaed_date, units = "days")) / 365.25)
+(survey_data$Age <- as.numeric(difftime(Sys.Date(), formaed_date, units = "days")) %/% 365.25)
 #survey_data
 
 ```
@@ -86,6 +86,25 @@ prop.table(table(males$Age < 30))[2] * 100
 
 
 ```
+```{r}
+#calculating quantiles 
+(q1 <- quantile(survey_data$Age, 0.25))  #25th percentaile which is lower quantile
+(q3 <- quantile(survey_data$Age, 0.75)) #75th percentaile which is upper quantile
+
+# calculating interquatile range (IQR), which is Q3 - Q1
+(IQR <- q3 - q1)
+
+(lower_bound <- q1 - 1.5 * IQR)
+(upper_bound <- q3  + 1.5 * IQR)
+```
+```{r}
+#cap
+data <- survey_data
+data$Age[data$Age > upper_bound] <- uppper_bound
+data$Age[data$Age < lower_bound] <- lower_bound
+hist(data$Age)
+```
+
 ## Outlier Detection
 we user `IQR` to detect outliers and the formlar is $$[Q1 - 1.5*TQR, Q3 + 1.5*IQR]$$
 ```{r}
@@ -97,5 +116,17 @@ mean(survey_data$Age, na.rm = TRUE)
 survey_data$Age[is.na(survey_data$Age)]  <- mean(survey_data$Age, na.rm = TRUE)
 boxplot(survey_data$Age)
 ```
+```{r}
+summary(survey_data$Age)
+sd(survey_data$Age)
+```
+
+
+```{r}
+hist(survey_data$Age, xlab="Ages", ylab = "Frequency")
+```
+
+formular for sample 
+
 
 
