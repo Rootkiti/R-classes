@@ -122,6 +122,68 @@ Getting `names` of elements of a list
 ```{r}
 names(l)
 ```
+to rename an element in R, you have to access it's index using names(list) vector and then you give the new nae to the elements index
+
+```{r}
+names(l)[4] <- "Bool"
+```
 
 
+to remove ana element from the list we can 1. set it's index to `NULL` or you can use negative index$$[[-index]]$$
+```{r}
+l[4] <-NULL
+l[-3]
+names(l)
+```
+## DataFrame
+
+dataframes can be created using `data.frame`
+```{r}
+df <- data.frame(
+  names = c('robert','rootkit'),
+  Ages = c(12,23)
+)
+str(df)
+```
+## converting continous variables into categorical variable
+```{r}
+set.seed(42)
+n=120
+df1<-data.frame(
+  "ID" = paste0("Participant_",1:n),
+  "ages" = sample(0:120, size=n)
+)
+df1
+
+
+```
+adding a column to a dataframa
+```{r}
+brks <- seq(0,120,10)
+
+df1$Age_Group  <- cut(df1$ages, breaks = brks, include.lowest=TRUE)
+df1
+```
+
+```{r}
+df1[10:20,]
+
+sample(df1, 10, replace = TRUE)
+
+
+```
+
+```{r}
+
+(counts = table(df1$Age_Group))
+(counts_df <- data.frame(
+  age_groups = names(counts),
+  counts = as.numeric(counts)
+  
+))
+barplot(counts, ylab = "frequency")
+hist(df1$ages, ylab = "Frequency", xlab = "Ages", main = "Age Distribution")
+(IDs_in_70_80_group = df1[df1$Age_Group == "(70,80]",1])
+```
+## Data Manipulation
 
