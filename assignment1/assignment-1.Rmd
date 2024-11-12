@@ -33,14 +33,13 @@ data$Background[grepl("design", data$Background, ignore.case = TRUE)] <- "Indust
 data$Background[grepl("information systems", data$Background, ignore.case = TRUE)] <- "Information Systems"
 
 
-
 ```
 
 ```{r}
  counts <- table(data$Background)
 background_summary <- data.frame(
   Field = names(counts),
-  Count = as.integer(counts),
+  Count = as.numeric(counts),
   Percentage = round(prop.table(counts) * 100, 2)
 )
 background_summary <- background_summary[order(-background_summary$Count), ]
@@ -48,6 +47,8 @@ background_summary <- background_summary[order(-background_summary$Count), ]
 
 background_summary$Percentage.Var1 <-NULL
 colnames(background_summary) <- c("Field","Count", "Percentage")
+
+background_summary
 ```
 
 
