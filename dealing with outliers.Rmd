@@ -1,0 +1,57 @@
+---
+title: "dealing with outliers"
+author: "Rootkit"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+lets generate dump data
+```{r}
+set.seed(42)
+data <- sample(2.25:100, , replace = FALSE)
+data[c(20,35)] <- data[c(20,25)] *10
+data
+
+boxplot(data)
+data_copy <- data
+```
+```{r}
+quat <- as.numeric(quantile(data, probs = c(0.25, 0.5, 0.75)))
+
+df <- as.data.frame(t(quat))
+
+names(df) <- paste0('Q', 1:length(quat))
+rownames(df) <- "stats"
+df$IQR <- df$Q3 - df$Q1
+df$LowerLim = df$Q1 - 1.5*df$IQR
+df$UpperLim = df$Q3 + 1.5*df$IQR
+df
+```
+```{r}
+(d_out <- data.frame(x = data, outlier = data < df$LowerLim | data > df$UpperLim))
+
+```
+identifying outliers
+```{r}
+data[d_out$outlier]
+```
+identifying outliers using boxplot
+```{r}
+(bxpt <- boxplot(data, range = 1.5, plot = FALSE)) # we do not plot
+```
+identifying outliers from the list
+```{r}
+# find all outliers
+data[d_out$outlier] <- NA # or x[x %in% bxpt$out]
+data[d_out$outlier] <- mean(x, na.rm = TRUE)
+
+# boxplot of imputed x
+par(mfrow = c(1, 2))
+boxplot(data_copy, main = "Before\nhandling outliers", cex.main = 0.7)
+boxplot(data, main = "After\nhandling outliers", col = "lightskyblue", cex.main = 0.7)
+```
+
