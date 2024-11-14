@@ -70,7 +70,70 @@ text(x = barplot_values, y = fre, labels = fre, pos = 3, cex = 0.8, col = "black
 par(mfrow = c(1, 2))
 hist(iris$Sepal.Length, probability = T)
 lines(density(iris$Sepal.Length), col="red", lwd=1.5)
-plot(iris$Petal.Length,iris$Petal.Width, pch=16, col='lightskyblue')
-lines(0:10, lty = 2, lwd = 2)
+
+plot(iris$Petal.Length,iris$Petal.Width, pch=16, col=iris$Species, probability = T, xlab = "Petal Length", ylab = "Petal Width")
+#lines( lty = 2, lwd = 2, 0:7)
+legend("topleft", legend = unique(iris$Species), pch = 16, col= unique(iris$Species), bty="n")
+
+#let add a regression line to that fits the data
+reg_model <- lm(Petal.Width ~ Petal.Length, data = iris)
+
+# Add the regression line to the plot
+abline(reg_model, col = "blue", lwd = 2, lty=2)
+
+
+```
+scatter plot to show the relationship btn two variables
+```{r}
+set.seed(42)
+x<- runif(1000) # this provides 1000 random numbers
+
 ```
 
+### Histogram
+```{r}
+hist(
+  x, probability = T, main = "Histogram of a uniform distribution", col = 'lightskyblue'
+  )
+#adding a linr on histogram as an overlay
+lines(density(x), lwd=2, lty=2)
+```
+calculating variance
+```{r}
+#1 type of variance
+(meanx <- mean(x))
+(variance1 <- var(x))
+(variance2 <- mean(x^2) - meanx^2)
+```
+standard deviation
+```{r}
+(sdx <- sd(x))
+#coefficient of 
+(sdx/meanx)
+```
+
+Testing normarity
+```{r}
+ks.test(x,"pnorm")
+qqnorm(x, col='black')
+qqline(x, lwd=2, col='lightskyblue')
+```
+Binomial distribution, we can generate random numbers using `rbinom``
+```{r}
+rbinom_dist <- rbinom(10000, 1, 0.6)
+hist(rbinom_dist, probability = TRUE, main = "Histogram of binomial distribution", 
+     col = "turquoise", breaks = 20, xlab = NULL)
+lines(density(rbinom_dist), col = "red", lwd = 2, lty = 2)
+abline(v = mean(rbinom_dist), col = "blue", lty = 2, lwd = 2) # vertical line
+legend("topleft", lty = c(2, 2), 
+       col = c("red", "blue"), legend = c("Density", "Average"))
+```
+
+```{r}
+par(mfrow=c(1,2))
+pie(table(rbinom_dist))
+barplot(table(rbinom_dist))
+```
+$$
+f_x(x) = \frac{1}{\sqrt{2\pi\sigma}}\exp\left\{-\}
+$$
