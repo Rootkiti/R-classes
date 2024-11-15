@@ -137,3 +137,54 @@ barplot(table(rbinom_dist))
 $$
 f_x(x) = \frac{1}{\sqrt{2\pi\sigma}}\exp\left\{-\}
 $$
+```{r}
+set.seed(13092024)
+gauss_dist <- rnorm(1000, mean = 0, sd = 1)
+hist(gauss_dist, probability = TRUE, breaks = 30, xlab = NULL,
+     main = "Histogram of standard normal\ndistribution", col = "turquoise")
+lines(density(gauss_dist), col = "red", lwd = 2, lty = 2)
+abline(v = mean(gauss_dist), col = "blue", lty = 2, lwd = 2)
+legend("topleft", lty = c(2, 2), 
+       col = c("red", "blue"), legend = c("Density", "Average"))
+```
+```{r}
+(mean(gauss_dist))
+(sd(gauss_dist))
+
+```
+```{r}
+set.seed(13092024)
+x <- rnorm(1000)
+
+y <- rnorm(1000, mean = 5, sd = 1.5)
+z <- 4 + 8*x + rnorm(1000) # linear dependence between x and z
+
+(df<-data.frame(x,z))
+```
+
+
+```{r}
+LR <- lm(z ~ x)
+
+
+par(mfrow = c(1, 2))
+plot(x, y, main = "Scatter plot of x and y", col = "blue", pch = 16); grid()
+plot(x, z, main = "Scatter plot of x and z", col = "blue", pch = 16)
+abline(LR, col = "red")
+```
+```{r}
+LR <- lm(z ~ x, data=df)
+#coefficients
+coefficients(LR)
+
+#model summary
+summary(LR)
+par(mfrow=c(2,2))
+plot(LR)
+```
+prediction 
+```{r}
+new_data = data.frame(x=15)
+predict(LR, new_data)
+```
+
