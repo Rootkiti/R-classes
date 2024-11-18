@@ -1,0 +1,143 @@
+---
+title: "flow controls"
+author: "Rootkit"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+#flow controls
+1. if-- else
+```{r}
+if(8<9)
+{
+  print(T)
+}else{
+  print(F)
+}
+
+```
+2. ternaly operator `ifelse`
+```{r}
+ifelse(8<9,T,F) # vectorized  function
+```
+3. nest if
+```{r}
+set.seed(123)
+marks <- round(rnorm(50, mean=60, sd=15),2)
+category = character(0)
+for( mark in marks){
+  if(mark > 60)
+  {
+    if(mark>=60 & mark<70)
+    {
+      cat(mark, "pass \n")
+      category <-c(category, "Pass")
+      
+    }else{
+      
+      if(mark>=70 & mark<80)
+      {
+        cat(mark, "Good pass \n")
+        category <-c(category, "Good Pass")
+      }else{
+        if(mark>=80 & mark<85)
+        {
+          cat(mark, " Very Good pass\n")
+          category <-c(category, "Very Good Pass")
+        }else{
+          cat(mark, "Distinction\n")
+          category <-c(category, "Distinction")
+        }
+      }
+    }
+  }else{
+    cat(mark,"Fail\n")
+    category <-c(category, "Fail")
+  }
+}
+
+data <- data.frame("marks"=marks, "Category"=category)
+```
+using index
+```{r}
+
+category2 = character(0)
+for( i in 1:length(marks)){
+  if(marks[i] > 60)
+  {
+    if(marks[i]>=60 & marks[i]<70)
+    {
+      cat(marks[i], "pass \n")
+      category2 <-c(category2, "Pass")
+      
+    }else{
+      
+      if(marks[i]>=70 & marks[i]<80)
+      {
+        cat(marks[i], "Good pass \n")
+        category2 <-c(category2, "Good Pass")
+      }else{
+        if(marks[i]>=80 & marks[i]<85)
+        {
+          cat(marks[i], " Very Good pass\n")
+          category2 <-c(category2, "Very Good Pass")
+        }else{
+          cat(marks[i], "Distinction\n")
+          category2 <-c(category2, "Distinction")
+        }
+      }
+    }
+  }else{
+    cat(marks[i],"Fail\n")
+    category2 <-c(category2, "Fail")
+  }
+}
+data$category2 <- category2
+```
+using ifelse
+```{r}
+ifelse(
+  marks < 60,
+  print("Fail"), 
+  ifelse(
+    marks >= 60 & marks < 70,
+    print("Pass"),
+    ifelse(
+      marks >= 70 & marks < 80,
+      print("Good Pass"),
+           ifelse(
+             marks >= 80 & marks < 85, 
+             print("Very Good Pass"), 
+             print("Distincition")
+                  )
+           )
+    )
+  )
+```
+```{r}
+categories <- ifelse(
+  marks < 60, "Fail", 
+  ifelse(
+    marks < 70, "Pass", 
+    ifelse(
+      marks < 80, "Good Pass", 
+      ifelse(
+        marks < 85, "Very Good Pass", 
+        "Distinction"
+      )
+    )
+  )
+)
+
+
+data$category3 <-   categories
+
+
+data
+
+```
+
