@@ -99,25 +99,8 @@ for( i in 1:length(marks)){
 data$category2 <- category2
 ```
 using ifelse
-```{r}
-ifelse(
-  marks < 60,
-  print("Fail"), 
-  ifelse(
-    marks >= 60 & marks < 70,
-    print("Pass"),
-    ifelse(
-      marks >= 70 & marks < 80,
-      print("Good Pass"),
-           ifelse(
-             marks >= 80 & marks < 85, 
-             print("Very Good Pass"), 
-             print("Distincition")
-                  )
-           )
-    )
-  )
-```
+
+
 ```{r}
 categories <- ifelse(
   marks < 60, "Fail", 
@@ -140,4 +123,74 @@ data$category3 <-   categories
 data
 
 ```
+```{r}
+marks_fn <- function(marks){
+    categories <- ifelse(
+    marks < 60, "F", 
+    ifelse(
+      marks < 70, "P", 
+      ifelse(
+        marks < 80, "GP", 
+        ifelse(
+          marks < 85, "VGP", 
+          "D"
+        )
+      )
+    )
+  )
+  
+  cat_table <- table(categories)
+  barplot(
+    cat_table,
+    xlab = "Categories",
+    ylab = "Frequency",
+    main = "Distribution of marks ",
+    space = .001
+    
+    )
+  
+  
+  
+  df <- data.frame("Marks"=marks, "Categories"=categories)  
+  
+   
+}
+
+head(marks_fn(marks = marks),10)
+```
+using repeat control structure
+```{r}
+i <- 0
+repeat{
+  print(i)
+  if(i == 10){
+    break
+  }
+  
+  i <- i + 1
+}
+```
+1.Apply()
+The `apply()` function lets us apply a function to the rows or columns of a matrix or data frame. This function takes matrix or data frame as an argument along with function and whether it has to be applied by row or column and returns the result in the form of a vector or array or list of values obtained
+
+Syntax: apply( x, margin, function )
+
+
+Parameters:
+
+
+x: determines the input array including matrix.
+margin: If the margin is 1 function is applied across row, if the margin is 2 it is applied across the column.
+function: determines the function that is to be applied on input data.
+```{r}
+(A<-matrix(1:4, 2,2))
+#lets apply sum function across the row to our matrix
+apply(A, 1, sum)
+
+# let apply sum across columns
+apply(A, 2, sum)
+```
+we can use `apply()` function to a pply certain manuplitaions to our data either applying build in functions or using our oun custom functions
+
+
 
