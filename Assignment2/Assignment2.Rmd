@@ -32,14 +32,35 @@ houseH <- read_sav("DHS2020/RWPR81FL.sav")
 
 
 # data dimension
-dims <- dim(houseH)
+dim(houseH)
 
 
 ```
-The dataset has `r dims[1]`
+The dataset has `r dims[1]` observations and `r dims[2]` features
+
 - Visualize, inspect and get familiar with the data
 ```{r}
 # your code here
+View(houseH) 
+str(houseH) # Understand the data structure (types, dimensions, column details).
+
+data.frame(summary(houseH))  # summary statistics for each column
+
+# top 6 rows
+head(houseH)
+
+# last 6 rows
+tail(houseH)
+
+# column names
+names(houseH)
+
+# counting missing values for columns
+data.frame("Sum of Missing values by colmuns" = colSums(is.na(houseH)))
+
+# identifying columns type
+data.frame(sapply(houseH, class))
+
 ```
 
 
@@ -48,33 +69,57 @@ The dataset has `r dims[1]`
 
 ```{r}
 # your code here
+columns <- c("HV001", "HV009", "HV010", "HV011", "HV014", "SHDISTRICT", "HV024", "HV025", "HV040", "HV227", "HV228", "HV270", "HV105", "HV106", "HML3", "HML4", "HML7",
+  "HML10", "HML22", "HML32","HML33", "HML35")
+df <- houseH[,columns]
 ```
 
   
 3. Rename variables using the variable descriptions below. Give meaningful (short) name to the variables of your choice.
 
->* HV001= "Cluster number", 
->* HV009 = "Number of household members",
->* HV010 = "Number of eligible women in household",
->* HV011 = "Number of eligible men in household",
->* HV014 = "Number of children 5 and under (de jure)",
->* SHDISTRICT = "District (geographic area)",
->* HV024 = "Region (provinces, corresponding values in a map file)",
->* HV025 = "Type of place of residence (rural versus urban)",
->* HV040 = "Cluster altitude in meters",
->* HV227 = "Presence of mosquito bed net for sleeping",
->* HV228 = "Number of children under 5 who slept under a mosquito bed net",
->* HV270 = "Wealth index combined (an index based on various household assets indicating socio-economic status)",
->* HV105 = "Age of household members",
->* HV106 = "Highest educational level attained by individuals",
->* HML3 = "Net observed by interviewer",
->* HML4 = "Months ago the net was obtained",
->* HML7 = "Brand of net",
->* HML10 = "Insecticide-Treated Net (ITN)",
->* HML22 = "Obtained net from campaign, antenatal, or immunization visit",
->* HML33= "Result of malaria measurement", 
->* HML32 = "Final result of malaria from blood smear test",
->* HML35 = "Result of malaria rapid test"
+>* HV001= "Cluster number", -> "cluster_no"
+>* HV009 = "Number of household members", -> "no_HH_member"
+>* HV010 = "Number of eligible women in household", -> 
+>* HV011 = "Number of eligible men in household", ->
+>* HV014 = "Number of children 5 and under (de jure)", -> 
+>* SHDISTRICT = "District (geographic area)", -> 
+>* HV024 = "Region (provinces, corresponding values in a map file)", -> 
+>* HV025 = "Type of place of residence (rural versus urban)", -> 
+>* HV040 = "Cluster altitude in meters", -> 
+>* HV227 = "Presence of mosquito bed net for sleeping", -> 
+>* HV228 = "Number of children under 5 who slept under a mosquito bed net", -> 
+>* HV270 = "Wealth index combined (an index based on various household assets indicating socio-economic  status)", -> 
+>* HV105 = "Age of household members", -> 
+>* HV106 = "Highest educational level attained by individuals", -> 
+>* HML3 = "Net observed by interviewer", -> 
+>* HML4 = "Months ago the net was obtained", -> 
+>* HML7 = "Brand of net", -> 
+>* HML10 = "Insecticide-Treated Net (ITN)", -> 
+>* HML22 = "Obtained net from campaign, antenatal, or immunization visit", -> 
+>* HML33= "Result of malaria measurement", -> 
+>* HML32 = "Final result of malaria from blood smear test", -> 
+>* HML35 = "Result of malaria rapid test" -> 
+
+```{r}
+new_names <- c("cluster_no","no_HH_member","no_elig_wom_HH","no_elig_men_HH","child_under_5years","district",
+               "province","locality","cluster_alt_M","mosquito_net_yes","child_under_5years_net_yes",
+               "socio-economic_status","HH_members_ages","education_level","net_observed",
+               "months_since_net_obtained","net_brand","ITN","antenatal","malaria_measures",
+               "malaria_blood_T_result","malaria_rapid_T_result")
+length(new_names)
+
+names(df) <- new_names
+```
+
+
+
+```{r}
+dd <- unique(df$province)
+as_factor(dd)
+
+unique(df$HH_members_ages)
+```
+
 
 ## Data cleaning
 
@@ -83,6 +128,29 @@ Example, Variable "HV024"(Region) has Unique values 1,2,3,4,5. Decode it to orgi
 Use Map file to see the description of each values in data. 
 
 ```{r}
+df$province <- as_factor(df$province)
+
+df$district <- as_factor(df$district)
+
+df$locality <- as_factor(df$locality)
+
+df$mosquito_net_yes <- as_factor(df$mosquito_net_yes) 
+
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+
+df$'socio-economic_status' <- as_factor(df$'socio-economic_status')
+
+
+
+
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+\df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
+
+
 # your code
 ```
 

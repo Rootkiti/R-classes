@@ -191,6 +191,20 @@ apply(A, 1, sum)
 apply(A, 2, sum)
 ```
 we can use `apply()` function to a pply certain manuplitaions to our data either applying build in functions or using our oun custom functions
+https://www.geeksforgeeks.org/apply-lapply-sapply-and-tapply-in-r/
+
+2. lapply() function
+The `lapply()`function helps us in applying functions on list objects and returns a list object of the same length. The lapply() function in the R Language takes a list, vector, or data frame as input and gives output in the form of a list object. Since the lapply() function applies a certain operation to all the elements of the list it doesn’t need a MARGIN. 
+
+```{r}
+(names<-c("rootkit","robert","root"))
+lapply(names, toupper)
+```
+```{r}
+s <- "R|t"
+strsplit(s,"|")
+
+```
 
 
 
