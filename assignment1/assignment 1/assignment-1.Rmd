@@ -1,0 +1,79 @@
+---
+title: "assignment-1"
+author: "Robert UWITONZE"
+date: "2024-11-09"
+output:   html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+data <- read.csv("../../data.csv")
+
+```
+
+
+```{r echo=FALSE}
+
+
+data$Background[grepl("statistic", data$Background, ignore.case = TRUE)] <- "Applied Statistics"
+
+data$Background[grepl("tourism", data$Background, ignore.case = TRUE)] <- "Travel and Tourism Management"
+
+data$Background[grepl("data scie", data$Background, ignore.case = TRUE)] <- "Data Science"
+
+data$Background[grepl("Information Technology Major of Information Management", data$Background, ignore.case = TRUE)] <- "Information Technology"
+
+data$Background[grepl("Civil Engineering", data$Background, ignore.case = TRUE)] <- "Civil Engineering"
+
+data$Background[grepl("Quantity sur", data$Background, ignore.case = TRUE)] <- "Quantity Surveying"
+
+data$Background[grepl("design", data$Background, ignore.case = TRUE)] <- "Industrial Art and Design"
+
+data$Background[grepl("information systems", data$Background, ignore.case = TRUE)] <- "Information Systems"
+
+
+
+```
+
+```{r}
+ counts <- table(data$Background)
+background_summary <- data.frame(
+  Field = names(counts),
+  Count = as.numeric(counts),
+  Percentage = round(prop.table(counts) * 100, 2)
+)
+background_summary <- background_summary[order(-background_summary$Count), ]
+
+
+background_summary$Percentage.Var1 <-NULL
+colnames(background_summary) <- c("Field","Count", "Percentage")
+background_summary
+```
+
+
+```{r}
+?pie
+```
+
+```{r}
+colors <- c("red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink", "lightblue")
+
+pie(
+  background_summary$Percentage,
+  labels =  paste(background_summary$Field, "(",background_summary$Percentage,"%)"),
+  col = colors,
+  cex=0.7
+  )
+
+
+```
+<br>
+Majority of participants are from **Applied Statistics** with <font color="red">*`52.94%`*</font>, 
+**Data Science** follows with a substantial share of <font color="orange">*`9.8%`* </font>. 
+ **Information Systems** and **Industrial Art and Design** each have a similar  percentage of participants of <font color="green">*`7.84%`*</font>. 
+The remaining fields, including **Civil Engineering**, **Quantity Surveying**, **Travel and Tourism Management**, **Demography**, and **Information Technology**, have small percentages, ranging from <font color="purple">*`1.96%`*</font> to <font color = "blue">*`5.88%`*</font>. <br>
+**Overall, the chart highlights a strong preference for fields related to data, statistics, and technology among the participants**.
+
