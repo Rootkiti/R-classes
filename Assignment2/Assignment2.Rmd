@@ -114,16 +114,10 @@ length(new_names)
 
 
 names(df) <- new_names
+
 ```
 
 
-
-```{r}
-dd <- unique(df$province)
-as_factor(dd)
-
-unique(df$HH_members_ages)
-```
 
 
 ## Data cleaning
@@ -135,9 +129,9 @@ Use Map file to see the description of each values in data.
 ```{r}
 
 decode <- function(data){
-  for(i in 1:length(data)){
-    if("haven_labelled" %in% class(data[[i]])){
-    data[[i]] <- as_factor(data[[i]])
+  for(name in colnames(data)){
+    if("haven_labelled" %in% class(data[[name]]) & (!name %in% c("HH_members_ages","months_since_net_obtained"))){
+    data[name] <- as_factor(data[name])
    }
   }
  return(data)
@@ -145,25 +139,6 @@ decode <- function(data){
   
 df <- decode(df)
 
-#alternative way lazy method,.. its just a joke
-
-df$province <- as_factor(df$province)
-
-df$district <- as_factor(df$district)
-
-df$locality <- as_factor(df$locality)
-
-df$mosquito_net_yes <- as_factor(df$mosquito_net_yes) 
-
-df$child_under_5years_net_yes <- as_factor(df$child_under_5years_net_yes)
-
-df$'socio-economic_status' <- as_factor(df$'socio-economic_status')
-
-unique(df$education_level)
-
-
-
-# your code
 ```
 
 
@@ -171,9 +146,37 @@ unique(df$education_level)
 
 Determine columns with missing values. Devise the strategy to handle missing values: Deleting missing values, replacing missing values with mean or mode.
 ```{r}
+options(warn = -1)
 # your code
 library(dplyr)
-sapply(df, function(x) sum(is.na(x))) %>% sort(decreasing = TRUE) %>% data.frame() %>% rename( "null_count" = 1) %>% mutate(null_proprition=round(null_count/nrow(df)*100,2))
+count_NA <- function(data){
+  data <- sapply(data, function(x) sum(is.na(x))) %>% sort(decreasing = TRUE) %>% data.frame() %>% rename( "null_count" = 1) %>% mutate(null_proprition=paste0(round(null_count/nrow(df)*100,2),"%"))
+  
+  return(data)
+}
+count_NA(df)
+```
+
+
+
+```{r}
+NA_imputer <- function(data){
+  for(cname in colnames(Filter(function(col)  any(is.na(col)), data))){
+    #print(paste(cname,":",names(sort(table(data[cname]), decreasing = T)[1])))
+    if("factor" %in% class(data[[cname]])){
+        data[cname][is.na(data[cname])] <- names(sort(table(data[[cname]]), decreasing = T)[1])
+
+    }else{
+      data[cname][is.na(data[cname])] <- as.integer(mean(data[[cname]], na.rm = T))
+
+    }
+  }
+  return(data)
+}
+
+clean_df <- NA_imputer(df)
+
+count_NA(clean_df)
 
 ```
 
@@ -182,6 +185,11 @@ sapply(df, function(x) sum(is.na(x))) %>% sort(decreasing = TRUE) %>% data.frame
 
 >a. Create variable called "Old Mosquito" variable HML4 (Months ago the net was obtained). The created variable must binary with 1 when mosquito is more than 24 months old. 
 >b. Create Variable "Average District altitude". Create this variable by averaging cluster altitude in each district. We have three variables HV001= "Cluster number", SHDISTRICT = "District (geographic area)" and HV040 = "Cluster altitude in meters". Filter out clusters in each district, do `mean` of cluster altitude in that district. 
+
+```{r}
+clean_df = clean_df %>% mutate()
+```
+
 
 ## Data visualizations: 
 
