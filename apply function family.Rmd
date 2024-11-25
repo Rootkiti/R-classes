@@ -1,0 +1,54 @@
+---
+title: "working with files from multiple sources"
+author: "Rootkit"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+working with packages
+```{r}
+library(pacman)
+package_list = c('mice','tictoc')
+pacman::p_load(package_list, character.only = TRUE)
+```
+accessing the data from a package without loading it
+```{r}
+summary(iris)
+```
+checking class name using loop on a df
+```{r}
+tic()
+l <- c()
+for( i in 1:ncol(iris)){
+  l <- c(l,class(iris[[i]]))
+}
+toc()
+unique(l)
+```
+apply function
+```{r}
+tic()
+sapply(iris, class)
+toc()
+apply(iris,2,class)
+lapply(iris, class)
+
+```
+calculating mean for mumeric columns
+```{r}
+f <- function(x)
+{
+  sum(is.na(x))/length(x) * 100
+}
+sapply(Filter(is.numeric,iris), f)
+       
+?sapply()
+```
+the use of pipe and the use of tidyverse, rio
+
+
