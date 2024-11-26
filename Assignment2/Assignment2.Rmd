@@ -199,7 +199,6 @@ clean_df <- clean_df %>%
   ) %>%
   ungroup()
 
-names(clean_df)
 ```
 
 
@@ -221,10 +220,17 @@ clean_df %>%
     y = "Household With Nets", 
     fill = "Has Mosquito Net  Yes/No"
   ) +
+  geom_text(
+    aes(label = total_nets),
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 3
+  ) +
   theme_minimal()
 
 
 ```
+
 ```{r}
 library(ggplot2)
 clean_df %>% 
@@ -238,22 +244,73 @@ clean_df %>%
     y = "Count", 
     fill = "Education Levels"
   ) +
+  geom_text(
+    aes(label = ed_lev_counts),
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 3
+  ) +
   theme_minimal()
 ```
 
 - Pie plot
 ```{r}
 # your code
+props <- round(prop.table(table(clean_df$locality)) * 100,2)
+ props %>% pie(  main = "Distribution of Household by Locality",
+labels =paste(names(props), "(",as.numeric(props),"%)")) 
+ 
+
 ```
+```{r}
+
+ library(dplyr)
+
+# Filter and calculate percentages for "Rural" locality only
+props1 <- clean_df %>%
+  filter(locality == "Rural") %>%
+  count(antenatal) %>%
+  mutate(percentage = round((n / sum(n)) * 100, 2))
+
+props2 <- clean_df %>%
+  filter(locality == "Urban") %>%
+  count(antenatal) %>%
+  mutate(percentage = round((n / sum(n)) * 100, 2))
+
+# Create pie chart
+#windows(width = 12, height = 6)
+par(mfrow = c(1, 2))
+pie(
+  props1$percentage,
+  main = "Rural Locality",
+  labels = paste(props1$antenatal, "(", props1$percentage, "%)", sep = ""),
+  col = rainbow(length(props1$percentage)), # Distinct colors for each slice
+  cex = 0.5, # Adjust label size
+  radius = .4
+)
+pie(
+  props2$percentage,
+  main = "Urban Locality",
+  labels = paste(props2$antenatal, "(", props2$percentage, "%)", sep = ""),
+  col = rainbow(length(props2$percentage)), # Distinct colors for each slice
+  cex = 0.5 ,# Adjust label size
+  radius = .4
+)
+
+```
+
+
 
 - Histogram
 ```{r}
 # your code
+hist(clean_df$HH_members_ages, main = "Distribution of Household Ages", xlab = "Ages")
 ```
 
 - Boxplot
 ```{r}
 # your code
+boxplot(clean_df$HH_members_ages)
 ```
 
 
@@ -264,16 +321,49 @@ clean_df %>%
 1. Use Variable "HML33" to filter out people who had Malaria measurement. 
 ```{r}
 # your code
+table(clean_df$malaria_measures)['Measured']
+
 ```
 
 2. Calculate Malaria [Prevalence](https://dhsprogram.com/data/Guide-to-DHS-Statistics/Prevalence_of_Malaria_in_Children.htm) for both "Blood Smear" and "Rapid Test"
 ```{r}
 # your code
+table(clean_df$malaria_rapid_T_result)
+round(table(clean_df$malaria_blood_T_result)['Positive']/length(clean_df$malaria_blood_T_result) * 100, 2) 
+
+
+round(table(clean_df$malaria_rapid_T_result)['Positive']/length(clean_df$malaria_rapid_T_result) * 100, 2) 
+
 ```
 
 3. Aggregate Prevalence at district Level
 ```{r}
 # your code
+dd <- clean_df %>% group_by(district) %>% mutate(
+  RPT_prev = round(table(malaria_rapid_T_result)['Positive']/length(malaria_rapid_T_result) * 100,2 ),
+  BT_prev = round(table(malaria_blood_T_result)['Positive']/length(malaria_blood_T_result) * 100,2 )
+                                                 
+                                                 )
+
+aggregate(
+  c(malaria_rapid_T_result,malaria_blood_T_result) ~ district, 
+  data=clean_df, 
+  FUN = function(el) round(sum(el == "Positive") / length(el) * 100,2)
+  )
+
+library(dplyr)
+
+district_pre <- clean_df %>%
+  group_by(district) %>%
+  summarise(
+    malaria_rapid_prevalence = round(sum(malaria_rapid_T_result == "Positive") / n() * 100, 2),
+    malaria_blood_prevalence = round(sum(malaria_blood_T_result == "Positive") / n() * 100, 2)
+  )
+
+
+c <- c("district","RPT_prev","BT_prev")
+unique(dd[c])
+
 ```
 
 ### Analytical Analysis
@@ -282,6 +372,13 @@ clean_df %>%
 ***Hint:*** Check `?` the documentations for `t.test` and `aov`.
 ```{r}
 # your code
+t.test(district_pre$malaria_rapid_prevalence, district_pre$malaria_blood_prevalence, paired = T)
+
+t2 <-aov(data = district_pre, malaria_rapid_prevalence ~ malaria_blood_prevalence)
+
+```
+```{r}
+summary(t2)
 ```
 
 ### Bonus
