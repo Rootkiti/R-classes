@@ -32,7 +32,7 @@ houseH <- read_sav("DHS2020/RWPR81FL.sav")
 
 
 # data dimension
-dim(houseH)
+(dims <-dim(houseH))
 
 
 ```
@@ -108,8 +108,8 @@ df <- houseH[,columns]
 new_names <- c("cluster_no","no_HH_member","no_elig_wom_HH","no_elig_men_HH","child_under_5years","district",
                "province","locality","cluster_alt_M","mosquito_net_yes","child_under_5years_net_yes",
                "socio-economic_status","HH_members_ages","education_level","net_observed",
-               "months_since_net_obtained","net_brand","ITN","antenatal","malaria_measures",
-               "malaria_blood_T_result","malaria_rapid_T_result")
+               "months_since_net_obtained","net_brand","ITN","antenatal","malaria_blood_T_result",
+               "malaria_measures","malaria_rapid_T_result")
 length(new_names)
 
 
@@ -138,6 +138,7 @@ decode <- function(data){
 }
   
 df <- decode(df)
+
 
 ```
 
@@ -187,7 +188,18 @@ count_NA(clean_df)
 >b. Create Variable "Average District altitude". Create this variable by averaging cluster altitude in each district. We have three variables HV001= "Cluster number", SHDISTRICT = "District (geographic area)" and HV040 = "Cluster altitude in meters". Filter out clusters in each district, do `mean` of cluster altitude in that district. 
 
 ```{r}
-clean_df = clean_df %>% mutate()
+library(dplyr)
+clean_df <- clean_df %>%
+  mutate(
+    'Old Mosquito' = ifelse(months_since_net_obtained > 24, 1, 0)
+  ) %>%
+  group_by(district) %>%
+  mutate(
+    'Average District Altitude' = mean(cluster_alt_M, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+names(clean_df)
 ```
 
 
@@ -197,6 +209,36 @@ Produce visualization of your choice. At least each of these
 - Bar plot
 ```{r}
 # your code
+library(ggplot2)
+clean_df %>% 
+  group_by(province, mosquito_net_yes) %>% 
+  summarise(total_nets = n(), .groups = "drop") %>% 
+  ggplot(aes(x = province, y = total_nets, fill = as.factor(mosquito_net_yes))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Household with Mosquito Nets Distribution by Province", 
+    x = "Province", 
+    y = "Household With Nets", 
+    fill = "Has Mosquito Net  Yes/No"
+  ) +
+  theme_minimal()
+
+
+```
+```{r}
+library(ggplot2)
+clean_df %>% 
+  group_by(locality, education_level) %>% 
+  summarise(ed_lev_counts = n(), .groups = "drop") %>% 
+  ggplot(aes(x = locality, y = ed_lev_counts, fill = as.factor(education_level))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Education Level Distribution by Locality", 
+    x = "Locality", 
+    y = "Count", 
+    fill = "Education Levels"
+  ) +
+  theme_minimal()
 ```
 
 - Pie plot
