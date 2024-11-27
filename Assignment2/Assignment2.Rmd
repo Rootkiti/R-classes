@@ -6,7 +6,7 @@ date: "2024-01-10"
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
@@ -32,7 +32,7 @@ houseH <- read_sav("DHS2020/RWPR81FL.sav")
 
 
 # data dimension
-(dims <-dim(houseH))
+dims <-dim(houseH)
 
 
 ```
@@ -41,10 +41,6 @@ The dataset has `r dims[1]` observations and `r dims[2]` features
 - Visualize, inspect and get familiar with the data
 ```{r}
 # your code here
-View(houseH) 
-str(houseH) # Understanding the data structure (types, dimensions, column details).
-
-data.frame(summary(houseH))  # summary statistics for each column
 
 # top 6 rows
 head(houseH)
@@ -53,19 +49,16 @@ head(houseH)
 tail(houseH)
 
 # column names
-names(houseH)
+column_names <- names(houseH)
 
-# counting missing values for columns
-data.frame("Sum of Missing values by colmuns" = colSums(is.na(houseH)))
+statistical_summary <- summary(houseH)  # summary statistics for each column
 
-# identifying columns type
-data.frame(sapply(houseH, class))
+#str(houseH) # Understanding the data structure (types, dimensions, column details).
 
-```
-```{r}
- "haven_labelled" %in% class(houseH$HV025)
+
 
 ```
+
 
 
 2. Select only few columns, important in this Assignments. They are the following: "HV001", "HV009", "HV010", "HV011", "HV014", "SHDISTRICT", "HV024", "HV025", "HV040", "HV227", "HV228", "HV270", "HV105", "HV106", "HML3", "HML4", "HML7",
@@ -83,26 +76,26 @@ df <- houseH[,columns]
 
 >* HV001= "Cluster number", -> "cluster_no"
 >* HV009 = "Number of household members", -> "no_HH_member"
->* HV010 = "Number of eligible women in household", -> 
->* HV011 = "Number of eligible men in household", ->
->* HV014 = "Number of children 5 and under (de jure)", -> 
->* SHDISTRICT = "District (geographic area)", -> 
->* HV024 = "Region (provinces, corresponding values in a map file)", -> 
->* HV025 = "Type of place of residence (rural versus urban)", -> 
->* HV040 = "Cluster altitude in meters", -> 
->* HV227 = "Presence of mosquito bed net for sleeping", -> 
->* HV228 = "Number of children under 5 who slept under a mosquito bed net", -> 
->* HV270 = "Wealth index combined (an index based on various household assets indicating socio-economic  status)", -> 
->* HV105 = "Age of household members", -> 
->* HV106 = "Highest educational level attained by individuals", -> 
->* HML3 = "Net observed by interviewer", -> 
->* HML4 = "Months ago the net was obtained", -> 
->* HML7 = "Brand of net", -> 
->* HML10 = "Insecticide-Treated Net (ITN)", -> 
+>* HV010 = "Number of eligible women in household", -> "no_elig_wom_HH"
+>* HV011 = "Number of eligible men in household", -> "no_elig_men_HH"
+>* HV014 = "Number of children 5 and under (de jure)", -> "child_under_5years"
+>* SHDISTRICT = "District (geographic area)", -> "district"
+>* HV024 = "Region (provinces, corresponding values in a map file)", -> "province"
+>* HV025 = "Type of place of residence (rural versus urban)", -> "locality
+>* HV040 = "Cluster altitude in meters", -> "cluster_alt_M"
+>* HV227 = "Presence of mosquito bed net for sleeping", -> "mosquito_net_yes"
+>* HV228 = "Number of children under 5 who slept under a mosquito bed net", -> "child_under_5years_net_yes
+>* HV270 = "Wealth index combined (an index based on various household assets indicating socio-economic  status)", -> "socio-economic_status
+>* HV105 = "Age of household members", -> "HH_members_ages"
+>* HV106 = "Highest educational level attained by individuals", -> "education_level"
+>* HML3 = "Net observed by interviewer", -> "net_observed"
+>* HML4 = "Months ago the net was obtained", -> "months_since_net_obtained"
+>* HML7 = "Brand of net", -> "net_brand"
+>* HML10 = "Insecticide-Treated Net (ITN)", -> "ITN"
 >* HML22 = "Obtained net from campaign, antenatal, or immunization visit", -> 
->* HML33= "Result of malaria measurement", -> 
->* HML32 = "Final result of malaria from blood smear test", -> 
->* HML35 = "Result of malaria rapid test" -> 
+>* HML33= "Result of malaria measurement", -> "malaria_measures"
+>* HML32 = "Final result of malaria from blood smear test", -> "malaria_blood_T_result"
+>* HML35 = "Result of malaria rapid test" -> "malaria_rapid_T_result"
 
 ```{r}
 new_names <- c("cluster_no","no_HH_member","no_elig_wom_HH","no_elig_men_HH","child_under_5years","district",
@@ -110,7 +103,6 @@ new_names <- c("cluster_no","no_HH_member","no_elig_wom_HH","no_elig_men_HH","ch
                "socio-economic_status","HH_members_ages","education_level","net_observed",
                "months_since_net_obtained","net_brand","ITN","antenatal","malaria_blood_T_result",
                "malaria_measures","malaria_rapid_T_result")
-length(new_names)
 
 
 names(df) <- new_names
@@ -128,6 +120,13 @@ Use Map file to see the description of each values in data.
 
 ```{r}
 
+data.frame(sapply(df, class))
+
+```
+Upon examining the column classes, we discovered that some were labeled as `haven_labelled`. Referring to the **map file**, we chose to decode these columns to their original values using the `as_factor` method.
+
+```{r}
+
 decode <- function(data){
   for(name in colnames(data)){
     if("haven_labelled" %in% class(data[[name]]) & (!name %in% c("HH_members_ages","months_since_net_obtained"))){
@@ -138,8 +137,6 @@ decode <- function(data){
 }
   
 df <- decode(df)
-
-
 ```
 
 
@@ -157,7 +154,7 @@ count_NA <- function(data){
 }
 count_NA(df)
 ```
-
+From the table above, it is evident that some columns have a significant proportion of missing values, ranging from **42%** to **80%**. Typically, columns with **80%** missing data would be discarded. However, as these columns are critical to our analysis, we opted to impute the missing values. For numerical columns, we used the **mean**, while for categorical columns, we used the **mode**.
 
 
 ```{r}
@@ -180,6 +177,8 @@ clean_df <- NA_imputer(df)
 count_NA(clean_df)
 
 ```
+After imputation, all columns are now free of `missing values`.
+
 
 
 3. Create new variables
@@ -206,9 +205,11 @@ clean_df <- clean_df %>%
 
 Produce visualization of your choice. At least each of these
 - Bar plot
+
 ```{r}
 # your code
 library(ggplot2)
+
 clean_df %>% 
   group_by(province, mosquito_net_yes) %>% 
   summarise(total_nets = n(), .groups = "drop") %>% 
@@ -217,7 +218,7 @@ clean_df %>%
   labs(
     title = "Household with Mosquito Nets Distribution by Province", 
     x = "Province", 
-    y = "Household With Nets", 
+    y = "Households", 
     fill = "Has Mosquito Net  Yes/No"
   ) +
   geom_text(
@@ -230,17 +231,24 @@ clean_df %>%
 
 
 ```
+1.**Regional Distribution**
 
+The **East Province** has the highest number of households with mosquito nets (`8,521`), followed closely by the ***South Province** (`9,289`).
+The **North Province** has a relatively lower number of households with mosquito nets compared to other provinces.
+
+2.**Urban vs Rural Trends**
+
+In **Kigali**, a largely urban area, there is a stark contrast, with very few households (509) without mosquito nets. This could indicate better coverage programs or accessibility in urban settings.
 ```{r}
 library(ggplot2)
 clean_df %>% 
-  group_by(locality, education_level) %>% 
+  group_by(province, education_level) %>% 
   summarise(ed_lev_counts = n(), .groups = "drop") %>% 
-  ggplot(aes(x = locality, y = ed_lev_counts, fill = as.factor(education_level))) +
+  ggplot(aes(x = province, y = ed_lev_counts, fill = as.factor(education_level))) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(
-    title = "Education Level Distribution by Locality", 
-    x = "Locality", 
+    title = "Education Level Distribution by province", 
+    x = "province", 
     y = "Count", 
     fill = "Education Levels"
   ) +
@@ -248,10 +256,32 @@ clean_df %>%
     aes(label = ed_lev_counts),
     position = position_dodge(width = 0.9),
     vjust = -0.5,
-    size = 3
+    size = 2.5
   ) +
   theme_minimal()
 ```
+The graph highlights that `primary education` dominates across all provinces, with the **South ** (8,072) and  **East** (7,564) provinces leading in numbers, reflecting a strong emphasis on basic education.  **Kigali ** stands out with a relatively higher number of individuals with `higher education` (619), showcasing its urban advantage, while other provinces (North, West, South, and East) lag significantly, with higher education counts below 300, indicating limited access to advanced education. The  **North ** (5,053) and  **East ** (3,836) provinces have a notable number of individuals with `no education` or `preschool-level` education. Lastly,  **Don't Know ** responses are minimal, suggesting respondents whom we consider as those did not want to give the information.
+```{r}
+clean_df %>% 
+  group_by(locality, `socio-economic_status`) %>% 
+  summarise(counts = n(), .groups = "drop") %>% 
+  ggplot(aes(x = locality, y = counts, fill = as.factor(`socio-economic_status`))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Social Economic Status by Locality", 
+    x = "Locality", 
+    y = "Count", 
+    fill = "Social Economic Status"
+  ) +
+  geom_text(
+    aes(label = counts),
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 2.5
+  ) +
+  theme_minimal()
+```
+The **rural population** is predominantly concentrated in the `poorest (10,700)` and `poorer (10,440)` categories, highlighting widespread poverty in these areas. In contrast, **urban localities** have a significantly higher representation in the ``richest category (7,004)`. The `middle` and `richer` categories also show a stronger presence in **rural areas**, though the **urban population** contributes a smaller yet notable portion to these categories.
 
 - Pie plot
 ```{r}
@@ -262,43 +292,53 @@ labels =paste(names(props), "(",as.numeric(props),"%)"))
  
 
 ```
+The majority of households in survey are in rural areas.
+`r as.numeric(props[2])`% of households are located in rural areas, while only `r as.numeric(props[1])`% are in urban areas.
+
+
 ```{r}
 
- library(dplyr)
+ #library(dplyr)
 
 # Filter and calculate percentages for "Rural" locality only
-props1 <- clean_df %>%
-  filter(locality == "Rural") %>%
-  count(antenatal) %>%
-  mutate(percentage = round((n / sum(n)) * 100, 2))
+#props1 <- clean_df %>%
+ # filter(locality == "Rural") %>%
+  #$count(antenatal) %>%
+  #mutate(percentage = round((n / sum(n)) * 100, 2))
 
-props2 <- clean_df %>%
-  filter(locality == "Urban") %>%
-  count(antenatal) %>%
-  mutate(percentage = round((n / sum(n)) * 100, 2))
+#props2 <- clean_df %>%
+ # filter(locality == "Urban") %>%
+  #count(antenatal) %>%
+  #mutate(percentage = round((n / sum(n)) * 100, 2))
 
 # Create pie chart
 #windows(width = 12, height = 6)
-par(mfrow = c(1, 2))
-pie(
-  props1$percentage,
-  main = "Rural Locality",
-  labels = paste(props1$antenatal, "(", props1$percentage, "%)", sep = ""),
-  col = rainbow(length(props1$percentage)), # Distinct colors for each slice
-  cex = 0.5, # Adjust label size
-  radius = .4
-)
-pie(
-  props2$percentage,
-  main = "Urban Locality",
-  labels = paste(props2$antenatal, "(", props2$percentage, "%)", sep = ""),
-  col = rainbow(length(props2$percentage)), # Distinct colors for each slice
-  cex = 0.5 ,# Adjust label size
-  radius = .4
-)
+#par(mfrow = c(1, 2))
+
+# First pie chart
+#pie(
+ # props1$percentage,
+ # main = "Rural Locality",
+  #labels = paste(props1$antenatal, "(", props1$percentage, "%)", sep = ""),
+  #col = rainbow(length(props1$percentage)), # Distinct colors for each slice
+  #cex = 0.5, # Adjust label size
+  #radius = .4
+#)
+
+# Second pie chart
+#pie(
+  #props2$percentage,
+  #main = "Urban Locality",
+  #labels = paste(props2$antenatal, "(", props2$percentage, "%)", sep = ""),
+  #col = rainbow(length(props2$percentage)), # Distinct colors for each slice
+  #cex = 0.5, # Adjust label size
+  #radius = .4
+#)
+
+# Add a common title
+#mtext("Comparison of Antenatal Care in Rural and Urban Localities", side = 3,line=3, cex = .95)
 
 ```
-
 
 
 - Histogram
@@ -345,11 +385,7 @@ dd <- clean_df %>% group_by(district) %>% mutate(
                                                  
                                                  )
 
-aggregate(
-  c(malaria_rapid_T_result,malaria_blood_T_result) ~ district, 
-  data=clean_df, 
-  FUN = function(el) round(sum(el == "Positive") / length(el) * 100,2)
-  )
+
 
 library(dplyr)
 
@@ -373,17 +409,42 @@ unique(dd[c])
 ```{r}
 # your code
 t.test(district_pre$malaria_rapid_prevalence, district_pre$malaria_blood_prevalence, paired = T)
-
-t2 <-aov(data = district_pre, malaria_rapid_prevalence ~ malaria_blood_prevalence)
-
 ```
+The paired t-test results show a statistically significant difference between Blood Smear and Rapid Test measurements (\(t = -3.8688\), \(p = 0.00057\), \(df = 29\)), indicating that the mean of Rapid Test is higher than that of Blood Smear by approximately -0.206. The 95% confidence interval \([-0.3149, -0.0971]\) supports this conclusion, as it does not include 0. This suggests that Blood Smear consistently produces lower values than Rapid Test.
+
 ```{r}
-summary(t2)
+aov(data = district_pre, malaria_rapid_prevalence ~ malaria_blood_prevalence)
+
 ```
+The ANOVA results indicate that the predictor variable has a significant effect on the outcomes (\(F = 9.593\), \(p = 0.00301\)). The degrees of freedom for the test and residuals are 1 and 58, respectively, with the predictor explaining a variability of 0.976 (Sum Sq) compared to 5.900 for the residuals. The mean square for the predictor (\(0.9760\)) is notably higher than for the residuals (\(0.1017\)), and the highly significant p-value confirms that the predictor meaningfully influences the results. Together with the paired t-test, these findings show that the choice of test method significantly affects outcomes, with the paired t-test focusing on mean differences and ANOVA examining the overall variability.
+
 
 ### Bonus
 
 2. Using a statistical model of your choice, determine if there is a relationship between malaria prevalence in a district and its average altitude. 
 ```{r}
 # your code
+model <- lm(BT_prev ~ `Average District Altitude`, data = dd)
+
+# View the summary of the model
+summary(model)
+
+
+
 ```
+
+
+```{r}
+library(ggplot2)
+
+ggplot(dd, aes(x = `Average District Altitude`, y = BT_prev)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Relationship Between Malaria Prevalence and Altitude",
+       x = "Average District Altitude (m)",
+       y = "Malaria Prevalence") +
+  theme_minimal()
+
+```
+There is a statistically significant relationship between district altitude and malaria prevalence. Higher altitudes are associated with lower malaria prevalence. However, the 
+R-squared value indicates that altitude alone explains a small portion of the variability in malaria prevalence, suggesting other factors also play a significant role.
